@@ -69,17 +69,19 @@ class RunnerRegistry:
             files: Optional[List[str]] = None,
             collect_skip_comments: bool = True,
             repo_root_for_plan_enrichment: list[str | Path] | None = None,
+            lang: str = None,
     ) -> List[Report]:
         integration_feature_registry.run_pre_runner()
+        # 【lang】2 获取语言继续传递
         if len(self.runners) == 1:
             reports: Iterable[Report] = [self.runners[0].run(root_folder, external_checks_dir=external_checks_dir, files=files,
                                            runner_filter=self.runner_filter,
-                                           collect_skip_comments=collect_skip_comments)]
+                                           collect_skip_comments=collect_skip_comments, lang=lang)]
         else:
             reports = parallel_runner.run_function(
                 lambda runner: runner.run(root_folder, external_checks_dir=external_checks_dir, files=files,
                                           runner_filter=self.runner_filter,
-                                          collect_skip_comments=collect_skip_comments),
+                                          collect_skip_comments=collect_skip_comments, lang=lang),
                 self.runners, 1)
 
         for scan_report in reports:

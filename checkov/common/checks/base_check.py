@@ -43,6 +43,7 @@ class BaseCheck(metaclass=MultiSignatureMeta):
         self.benchmarks: dict[str, list[str]] = {}
         self.severity = None
         self.bc_category = None
+        self.lang = None
         if self.guideline:
             logging.debug(f'Found custom guideline for check {id}')
 
@@ -53,7 +54,9 @@ class BaseCheck(metaclass=MultiSignatureMeta):
         entity_name: str,
         entity_type: str,
         skip_info: _SkippedCheck,
+        lang: str,
     ) -> _CheckResult:
+        self.lang = lang
         check_result: _CheckResult = {}
         if skip_info:
             check_result["result"] = CheckResult.SKIPPED

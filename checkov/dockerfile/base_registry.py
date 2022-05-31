@@ -3,7 +3,7 @@ from checkov.common.models.enums import CheckResult
 
 
 class Registry(BaseCheckRegistry):
-    def scan(self, scanned_file, entity, skipped_checks, runner_filter):
+    def scan(self, scanned_file, entity, skipped_checks, runner_filter, lang=None):
 
         results = {}
         if not entity:
@@ -21,7 +21,7 @@ class Registry(BaseCheckRegistry):
                         entity_type = instruction
                         entity_configuration = entity[instruction]
                         self.update_result(check, entity_configuration, entity_name, entity_type, results, scanned_file,
-                                           skip_info)
+                                           skip_info, lang=lang)
 
         for check in self.wildcard_checks["*"]:
             skip_info = {}
@@ -34,12 +34,13 @@ class Registry(BaseCheckRegistry):
                 entity_type = "*"
                 entity_configuration = entity
                 self.update_result(check, entity_configuration, entity_name, entity_type, results, scanned_file,
-                                   skip_info)
+                                   skip_info, lang=lang)
         return results
 
-    def update_result(self, check, entity_configuration, entity_name, entity_type, results, scanned_file, skip_info):
+    # 【lang】5 将语言传给更新结果模块
+    def update_result(self, check, entity_configuration, entity_name, entity_type, results, scanned_file, skip_info, lang=None):
         result = self.run_check(check, entity_configuration, entity_name, entity_type, scanned_file,
-                                skip_info)
+                                skip_info, lang=lang)
         results[check] = {}
         if result['result'] == CheckResult.SKIPPED:
             results[check]['result'] = result['result']

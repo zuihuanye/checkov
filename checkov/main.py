@@ -292,8 +292,10 @@ def run(banner: str = checkov_banner, argv: List[str] = sys.argv[1:]) -> Optiona
         return exit_code
     elif config.file:
         runner_registry.filter_runners_for_files(config.file)
+        # 【lang】1 将语言参数传递到执行功能中
         scan_reports = runner_registry.run(external_checks_dir=external_checks_dir, files=config.file,
-                                           repo_root_for_plan_enrichment=config.repo_root_for_plan_enrichment)
+                                           repo_root_for_plan_enrichment=config.repo_root_for_plan_enrichment,
+                                           lang=config.lang)
         if baseline:
             baseline.compare_and_reduce_reports(scan_reports)
         if config.create_baseline:
@@ -324,6 +326,9 @@ def run(banner: str = checkov_banner, argv: List[str] = sys.argv[1:]) -> Optiona
 def add_parser_args(parser: ArgumentParser) -> None:
     parser.add('-v', '--version',
                help='version', action='version', version=version)
+    # 【lang】添加语言参数
+    parser.add('-L', '--lang',
+               help='lang', action='append')
     parser.add('-d', '--directory', action='append',
                help='IaC root directory (can not be used together with --file).')
     parser.add('--add-check', action='store_true', help="Generate a new check via CLI prompt")

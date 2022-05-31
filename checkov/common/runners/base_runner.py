@@ -52,6 +52,7 @@ class BaseRunner(ABC):
         self.file_extensions = file_extensions
         self.file_names = file_names
 
+    # 【lang】修改基础，添加语言参数
     @abstractmethod
     def run(
             self,
@@ -60,6 +61,7 @@ class BaseRunner(ABC):
             files: list[str] | None = None,
             runner_filter: RunnerFilter = RunnerFilter(),
             collect_skip_comments: bool = True,
+            lang: str | None = None,
     ) -> Report:
         pass
 

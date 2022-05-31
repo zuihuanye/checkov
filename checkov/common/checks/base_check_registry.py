@@ -133,7 +133,9 @@ class BaseCheckRegistry:
         entity_type: str,
         scanned_file: str,
         skip_info: _SkippedCheck,
+        lang: str,
     ) -> _CheckResult:
+        # 【lang】6 将语言传递给具体执行模块
         self.logger.debug("Running check: {} on file {}".format(check.name, scanned_file))
         result = check.run(
             scanned_file=scanned_file,
@@ -141,6 +143,7 @@ class BaseCheckRegistry:
             entity_name=entity_name,
             entity_type=entity_type,
             skip_info=skip_info,
+            lang=lang,
         )
         return result
 

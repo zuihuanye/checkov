@@ -19,8 +19,9 @@ class Runner(BaseRunner):
     def should_scan_file(self, filename: str) -> bool:
         return is_docker_file(os.path.basename(filename))
 
+    # 【lang】3 获取语言
     def run(self, root_folder=None, external_checks_dir=None, files=None, runner_filter=RunnerFilter(),
-            collect_skip_comments=True):
+            collect_skip_comments=True, lang=None):
         report = Report(self.check_type)
         files_list = []
         filepath_fn = None
@@ -59,8 +60,9 @@ class Runner(BaseRunner):
             skipped_checks = collect_skipped_checks(definitions[docker_file_path])
             instructions = definitions[docker_file_path]
 
+            # 【lang】4 将语言传递给扫描模块
             results = registry.scan(docker_file_path, instructions, skipped_checks,
-                                    runner_filter)
+                                    runner_filter, lang=lang)
             for check, check_result in results.items():
                 result_configuration = check_result['results_configuration']
                 startline = 0
